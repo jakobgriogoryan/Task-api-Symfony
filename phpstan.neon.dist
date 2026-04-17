@@ -1,0 +1,18 @@
+parameters:
+    level: 6
+    paths:
+        - src
+    excludePaths:
+        - src/Kernel.php
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Doctrine entity ids are nullable by design until Doctrine populates them.
+        - identifier: property.unusedType
+          path: src/Entity/*
+        # Inverse-side Doctrine collections are queried via the relation owner,
+        # so PHPStan can't see them being read.
+        - identifier: property.onlyWritten
+          path: src/Entity/*
+        # DTOs are built dynamically from decoded JSON (mixed) payloads.
+        - identifier: notIdentical.alwaysTrue
+          path: src/Dto/*

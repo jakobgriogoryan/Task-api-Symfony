@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+parameters:
+    app.mercure_jwt_secret: '%env(MERCURE_JWT_SECRET)%'
+    app.search_driver: '%env(default:default_search_driver:SEARCH_DRIVER)%'
+    default_search_driver: 'pg'
+    app.elasticsearch_url: '%env(default::ELASTICSEARCH_URL)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $mercureJwtSecret: '%app.mercure_jwt_secret%'
+            $elasticsearchUrl: '%app.elasticsearch_url%'
+            $searchDriver: '%app.search_driver%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/Dto/'
+            - '../src/Event/'
+            - '../src/Kernel.php'
+
+    # Alias the repository-facing reader interface and the cache invalidator
+    # to the same CachedTaskRepository instance so writes can flush keys.
+    App\Repository\TaskRepositoryInterface: '@App\Cache\CachedTaskRepository'
+    App\Cache\TaskListCacheInvalidatorInterface: '@App\Cache\CachedTaskRepository'
+
+    # Elasticsearch driver: wire the HTTP client + endpoint explicitly.
+    App\Search\ElasticTaskSearch:
+        arguments:
+            $httpClient: '@http_client'
+            $endpoint: '%app.elasticsearch_url%'
+
+    # Strategy factory selects the active search driver at runtime.
+    App\Search\TaskSearchInterface:
+        factory: ['@App\Search\TaskSearchFactory', 'create']

@@ -1,0 +1,41 @@
+framework:
+    rate_limiter:
+        login:
+            policy: 'token_bucket'
+            limit: 5
+            rate: { interval: '1 minute', amount: 5 }
+
+        register:
+            policy: 'token_bucket'
+            limit: 3
+            rate: { interval: '1 minute', amount: 3 }
+
+        comment_create:
+            policy: 'token_bucket'
+            limit: 30
+            rate: { interval: '1 minute', amount: 30 }
+
+        task_search:
+            policy: 'token_bucket'
+            limit: 60
+            rate: { interval: '1 minute', amount: 60 }
+
+when@test:
+    framework:
+        rate_limiter:
+            login:
+                policy: 'token_bucket'
+                limit: 10000
+                rate: { interval: '1 second', amount: 10000 }
+            register:
+                policy: 'token_bucket'
+                limit: 10000
+                rate: { interval: '1 second', amount: 10000 }
+            comment_create:
+                policy: 'token_bucket'
+                limit: 10000
+                rate: { interval: '1 second', amount: 10000 }
+            task_search:
+                policy: 'token_bucket'
+                limit: 10000
+                rate: { interval: '1 second', amount: 10000 }
