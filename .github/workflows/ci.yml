@@ -29,6 +29,9 @@ jobs:
       - name: Validate composer files
         run: composer validate --strict
 
+      - name: Bootstrap .env from template
+        run: cp .env.example .env
+
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
@@ -37,7 +40,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Coding standards (php-cs-fixer, dry-run)
         run: vendor/bin/php-cs-fixer fix --dry-run --diff --format=checkstyle | cs2pr
@@ -68,6 +71,9 @@ jobs:
           extensions: intl, bcmath, pdo_pgsql, pdo_sqlite, redis
           coverage: pcov
 
+      - name: Bootstrap .env from template
+        run: cp .env.example .env
+
       - name: Cache Composer dependencies
         uses: actions/cache@v4
         with:
@@ -76,7 +82,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
       - name: Generate JWT test keypair
         run: |

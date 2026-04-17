@@ -1,4 +1,6 @@
 {
+    "name": "app/task-api-symfony",
+    "description": "Collaborative Task Management REST API built with Symfony 8 and PHP 8.4.",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

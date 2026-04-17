@@ -59,6 +59,9 @@ Everything — Postgres, Redis, Mercure, the Messenger worker, and the API itsel
 # from the repository root
 cd task-api-symfony
 
+# first run only: create a local env file from the committed template
+cp .env.example .env
+
 # build the image and start the stack in the background
 docker compose up -d --build
 
@@ -98,8 +101,9 @@ to the filesystem cache in dev).
 
 ```bash
 cd task-api-symfony
+cp .env.example .env        # committed template; .env itself is gitignored
+cp .env.example .env.local  # put real secrets (DATABASE_URL, JWT_PASSPHRASE, ...) here
 composer install
-cp .env .env.local   # then edit DATABASE_URL, REDIS_URL, etc.
 
 php bin/console lexik:jwt:generate-keypair --skip-if-exists
 php bin/console doctrine:migrations:migrate --no-interaction

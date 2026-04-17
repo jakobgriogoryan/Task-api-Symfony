@@ -77,6 +77,7 @@ COPY . .
 RUN set -eux; \
     mkdir -p var/cache var/log; \
     chmod -R 0777 var; \
+    if [ ! -f .env ] && [ -f .env.example ]; then cp .env.example .env; fi; \
     composer dump-autoload --classmap-authoritative --no-dev; \
     if [ "$APP_ENV" = "prod" ]; then \
         php bin/console cache:warmup --no-debug || true; \
